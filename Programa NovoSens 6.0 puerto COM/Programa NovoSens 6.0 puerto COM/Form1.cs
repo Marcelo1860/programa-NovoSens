@@ -29,5 +29,27 @@ namespace Programa_NovoSens_6._0_puerto_COM
 
             BotBuscarPuerto.Enabled = false;
         }
+
+        private void BotBuscarPuerto_Click(object sender, EventArgs e)
+        {
+            string[] Puertosdisponibles = SerialPort.GetPortNames();
+
+            ComboPuertos.Items.Clear();
+
+            foreach (string puerto_simple in Puertosdisponibles)
+            {
+                ComboPuertos.Items.Add(puerto_simple);
+            }
+
+            if (ComboPuertos.Items.Count > 0)
+            {
+                MessageBox.Show("SELECCIONAR PUERTO DE TRABAJO");
+            }
+
+            else
+            {
+                MessageBox.Show("NO HAY PUERTO DISPONIBLE");
+            }
+        }
     }
 }
