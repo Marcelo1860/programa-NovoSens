@@ -33,11 +33,12 @@
             this.ComboPuertos = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.BotAbrirPuerto = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BotBuscarPuerto
             // 
-            this.BotBuscarPuerto.Location = new System.Drawing.Point(625, 94);
+            this.BotBuscarPuerto.Location = new System.Drawing.Point(513, 94);
             this.BotBuscarPuerto.Name = "BotBuscarPuerto";
             this.BotBuscarPuerto.Size = new System.Drawing.Size(75, 23);
             this.BotBuscarPuerto.TabIndex = 0;
@@ -62,11 +63,21 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "PUERTO COM";
             // 
+            // BotAbrirPuerto
+            // 
+            this.BotAbrirPuerto.Location = new System.Drawing.Point(643, 95);
+            this.BotAbrirPuerto.Name = "BotAbrirPuerto";
+            this.BotAbrirPuerto.Size = new System.Drawing.Size(75, 23);
+            this.BotAbrirPuerto.TabIndex = 4;
+            this.BotAbrirPuerto.Text = "ABRIR";
+            this.BotAbrirPuerto.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.BotAbrirPuerto);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ComboPuertos);
             this.Controls.Add(this.BotBuscarPuerto);
@@ -83,6 +94,7 @@
         private System.Windows.Forms.ComboBox ComboPuertos;
         private System.Windows.Forms.Label label1;
         private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.Button BotAbrirPuerto;
     }
 }
 

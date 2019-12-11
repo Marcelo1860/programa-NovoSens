@@ -38,7 +38,11 @@ namespace Programa_NovoSens_6._0_puerto_COM
 
             foreach (string puerto_simple in Puertosdisponibles)
             {
+                ComboPuertos.SelectedIndex = 0;
+
                 ComboPuertos.Items.Add(puerto_simple);
+
+
             }
 
             if (ComboPuertos.Items.Count > 0)
