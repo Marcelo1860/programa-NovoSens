@@ -21,38 +21,97 @@ namespace Programa_NovoSens_6._0_puerto_COM
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender , EventArgs e)
+        private void Form1_Load(object sender , EventArgs e) // inicializa las variables
         {
             strBufferIn = "";
 
             strBufferOut = "";
 
             BotBuscarPuerto.Enabled = false;
+
+            BotAbrirPuerto.Enabled = false;
         }
 
-        private void BotBuscarPuerto_Click(object sender, EventArgs e)
+        private void BotBuscarPuerto_Click(object sender, EventArgs e) // al hacer click sobre el boton de busqueda de puerto
         {
-            string[] Puertosdisponibles = SerialPort.GetPortNames();
+            string[] Puertosdisponibles = SerialPort.GetPortNames(); // Carga un vector de string con los nombre de los puertos encontrados 
 
-            ComboPuertos.Items.Clear();
+            ComboPuertos.Items.Clear(); // limpia la lista anterior de puertos
 
             foreach (string puerto_simple in Puertosdisponibles)
             {
+                
+
+                ComboPuertos.Items.Add(puerto_simple); // agrega a la lista los nombres de puertos encontrados
+
+
+            }
+
+            if (ComboPuertos.Items.Count > 0) // si encuentro algun puerto dice que seleccione el puerto deseado y habilita el boton de abrir puerto
+            {
                 ComboPuertos.SelectedIndex = 0;
 
-                ComboPuertos.Items.Add(puerto_simple);
-
-
-            }
-
-            if (ComboPuertos.Items.Count > 0)
-            {
                 MessageBox.Show("SELECCIONAR PUERTO DE TRABAJO");
+
+                BotAbrirPuerto.Enabled = true;
             }
 
-            else
+            else // si no se encuetra el puerto dispone un mensaje
             {
                 MessageBox.Show("NO HAY PUERTO DISPONIBLE");
+
+                strBufferIn = "";
+
+                strBufferOut = "";
+
+                BotAbrirPuerto.Enabled = false;
+            }
+        }
+
+        private void BotAbrirPuerto_Click(object sender, EventArgs e) // Al hacer click sobre el boton de abrir puerto 
+        {
+            try // en el caso de no haber error
+            {
+                if (BotAbrirPuerto.Text == "ABRIR") // se el puerto estaba cerrado
+                {
+                    SpPuertos.BaudRate = Int32.Parse(comboBaudRate.Text); // toma el BaudRate definido
+
+                    SpPuertos.DataBits = 8; // fija los bits del dato en 8
+
+                    SpPuertos.Parity = Parity.None; // define datos sin paridad
+
+                    SpPuertos.StopBits = StopBits.One; // define un bit de parada
+
+                    SpPuertos.Handshake = Handshake.None; 
+
+                    SpPuertos.PortName = ComboPuertos.Text; // guarda el nombre del puerto
+
+                    try
+                    {
+                        SpPuertos.Open(); // abre el puerto
+
+                        BotAbrirPuerto.Text = "CERRAR"; // modifica el texto del boton a "cerrar"
+
+
+                    }
+                    catch (Exception exc) // al producirse un error dispone el mensaje pertinente
+                    {
+
+                        MessageBox.Show(exc.Message.ToString());
+                    }
+                }
+
+                else if (BotAbrirPuerto.Text == "CERRAR") // si el puerto estaba abierto, se cierra el puerto y cambia el texto del boton 
+                {
+                    SpPuertos.Close();
+
+                    BotAbrirPuerto.Text = "ABRIR";
+                }
+            }
+            catch (Exception exc) // se dispone un mensaje ante cualquier error
+            {
+                MessageBox.Show(exc.Message.ToString());
+
             }
         }
     }
