@@ -17,7 +17,10 @@ namespace Programa_NovoSens_6._0_puerto_COM
 
         private string strBufferIn;
 
-      
+        public double[] Datos = new double[20];
+    
+        clsCalculos mate = new clsCalculos();
+
         public Form1()
         {
             InitializeComponent();
@@ -27,8 +30,25 @@ namespace Programa_NovoSens_6._0_puerto_COM
         {
             strBufferIn = accion;
 
+            for (int i = 0; i < 19; i++)
+            {
+                Datos[i] = Datos[i + 1];
+            }
 
-            DatosRecibidos.Items.Add(strBufferIn);
+            Datos[19] = Double.Parse(accion);
+
+            double media = mate.calcMedia(Datos, 20);
+
+            double desvest = mate.calcDesvest(Datos, 20, media);
+
+            double result = (desvest / media) * 100;
+
+            if (result < 0.3)
+            {
+                DatosRecibidos.Items.Add(media);
+            }
+
+            
         }
 
         private void AccesoInterrupcion(string accion) // funcion que adapta la interrupcion al acceso del form
@@ -46,7 +66,10 @@ namespace Programa_NovoSens_6._0_puerto_COM
         {
             strBufferIn = "";
 
-            
+            for (int i = 0; i < 20; i++)
+            {
+                Datos[i] = 0;
+            }
 
             BotBuscarPuerto.Enabled = false;
 
