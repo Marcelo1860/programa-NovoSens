@@ -67,6 +67,10 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "PUERTO COM";
             // 
+            // SpPuertos
+            // 
+            this.SpPuertos.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.Datorecibido);
+            // 
             // BotAbrirPuerto
             // 
             this.BotAbrirPuerto.Location = new System.Drawing.Point(643, 95);

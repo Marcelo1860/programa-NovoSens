@@ -13,19 +13,40 @@ namespace Programa_NovoSens_6._0_puerto_COM
 {
     public partial class Form1 : Form
     {
-        string strBufferIn;
+        private delegate void DelegadoAcceso(string accion);
 
-        string strBufferOut;
+        private string strBufferIn;
+
+      
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void AccesoForm(string accion) // funcion que permite obtener acceso al form
+        {
+            strBufferIn = accion;
+
+
+            DatosRecibidos.Items.Add(strBufferIn);
+        }
+
+        private void AccesoInterrupcion(string accion) // funcion que adapta la interrupcion al acceso del form
+        {
+            DelegadoAcceso Var_DelegaadoAcceso; // variable del delegado
+
+            Var_DelegaadoAcceso = new DelegadoAcceso(AccesoForm); // la variable apunta a la funcion AccesoForm
+
+            object[] arg = { accion }; // genera un argumento con la info que se obtiene en el puerto
+
+            base.Invoke(Var_DelegaadoAcceso, arg); // invoca la variable del delegado con su argumento
         }
 
         private void Form1_Load(object sender , EventArgs e) // inicializa las variables
         {
             strBufferIn = "";
 
-            strBufferOut = "";
+            
 
             BotBuscarPuerto.Enabled = false;
 
@@ -62,7 +83,6 @@ namespace Programa_NovoSens_6._0_puerto_COM
 
                 strBufferIn = "";
 
-                strBufferOut = "";
 
                 BotAbrirPuerto.Enabled = false;
             }
@@ -113,6 +133,19 @@ namespace Programa_NovoSens_6._0_puerto_COM
                 MessageBox.Show(exc.Message.ToString());
 
             }
+        }
+
+        private void Datorecibido(object sender, SerialDataReceivedEventArgs e)
+        {
+            /*string Data_in = SpPuertos.ReadExisting();
+
+            MessageBox.Show(Data_in);
+
+            //string Data2_in = Data_in;
+
+            //DatosRecibidos.Items.Add(Data2_in);*/
+
+            AccesoInterrupcion(SpPuertos.ReadExisting());
         }
     }
 }
