@@ -18,6 +18,10 @@ namespace Programa_NovoSens_6._0_puerto_COM
         private string strBufferIn;
 
         public double[] Datos = new double[20];
+
+        public double[] Datossec = new double[10];
+
+        int cond = 0;
     
         clsCalculos mate = new clsCalculos();
 
@@ -30,25 +34,68 @@ namespace Programa_NovoSens_6._0_puerto_COM
         {
             strBufferIn = accion;
 
-            for (int i = 0; i < 19; i++)
+            if (cond == 0)
             {
-                Datos[i] = Datos[i + 1];
+                for (int i = 0; i < 19; i++)
+                {
+                    Datos[i] = Datos[i + 1];
+                }
+
+                Datos[19] = Double.Parse(accion);
+
+                double media = mate.calcMedia(Datos, 20);
+
+                double desvest = mate.calcDesvest(Datos, 20, media);
+
+                double result = (desvest / media) * 100;
+
+                if (result < 0.3)
+                {
+
+                    cond = 1;
+                    
+                    int j = 0;
+
+                    for (int i = 19; i > 9 ; i--)
+                    {
+
+                        Datossec[j] = Datos[i];
+
+                        j++;
+                    }
+                }
             }
 
-            Datos[19] = Double.Parse(accion);
-
-            double media = mate.calcMedia(Datos, 20);
-
-            double desvest = mate.calcDesvest(Datos, 20, media);
-
-            double result = (desvest / media) * 100;
-
-            if (result < 0.3)
+            else if (cond == 1)
             {
-                DatosRecibidos.Items.Add(media);
+                double media = mate.calcMedia(Datossec, 10);
+
+                double control = Double.Parse(accion);
+
+                double aux = media + 25;
+
+                if (control > aux)
+                {
+                    DatosRecibidos.Items.Add(media);
+
+                    cond = 0;
+                }
+
+                else
+                {
+                    for (int i = 0; i < 9; i++)
+                    {
+                        Datossec[i] = Datossec[i + 1];
+                    }
+
+                    Datossec[9] = Double.Parse(accion);
+                }
+
+     
+
             }
 
-            
+
         }
 
         private void AccesoInterrupcion(string accion) // funcion que adapta la interrupcion al acceso del form
