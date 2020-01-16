@@ -17,11 +17,18 @@ namespace Programa_NovoSens_6._0_puerto_COM
 
         private string strBufferIn;
 
-        public double[] Datos = new double[20];
+        private double[] Datos = new double[20];
 
-        public double[] Datossec = new double[10];
+        private double[] Datossec = new double[10];
 
         int cond = 0;
+
+        int contador = 0;
+
+        private double[] Escalones = new double[2];
+
+        public double[] Saltos = new double[3];
+
     
         clsCalculos mate = new clsCalculos();
 
@@ -34,29 +41,70 @@ namespace Programa_NovoSens_6._0_puerto_COM
         {
             strBufferIn = accion;
 
-            if (cond == 0)
+            if (cond == 0) // compara si se observa estabilidad o salto
             {
-                for (int i = 0; i < 19; i++)
+                for (int i = 0; i < 19; i++) // carga vector
                 {
                     Datos[i] = Datos[i + 1];
                 }
 
                 Datos[19] = Double.Parse(accion);
 
-                double media = mate.calcMedia(Datos, 20);
+                double media = mate.calcMedia(Datos, 20); // calcula media
 
-                double desvest = mate.calcDesvest(Datos, 20, media);
+                double desvest = mate.calcDesvest(Datos, 20, media); // cacula desviacion 
 
-                double result = (desvest / media) * 100;
+                double result = (desvest / media) * 100; // calcula cv%
 
-                if (result < 0.3)
+                if (result < 0.3) // compara CV% para estimar estabilidad
                 {
 
-                    cond = 1;
+                    cond = 1; // cambia a condicion de deteccion de saltos
                     
                     int j = 0;
 
-                    for (int i = 19; i > 9 ; i--)
+                    if (contador > 0) // guarda datos y calcula saltos si es necesario
+                    {
+
+
+
+                        switch (contador)
+                        {
+                            
+
+                            case 1:
+                                Escalones[1] = media;
+                                Saltos[0] = Escalones[1] - Escalones[0];
+                                DatosRecibidos.Items.Add("Salto 1");
+                                DatosRecibidos.Items.Add(Saltos[0]);
+                                contador++;
+                                break;
+                            case 2:
+                                Escalones[1] = media;
+                                Saltos[1] = Escalones[1] - Escalones[0];
+                                DatosRecibidos.Items.Add("Salto 2");
+                                DatosRecibidos.Items.Add(Saltos[1]);
+                                contador++;
+                                break;
+                            case 3:
+                                Escalones[1] = media;
+                                Saltos[2] = Escalones[1] - Escalones[0];
+                                DatosRecibidos.Items.Add("Salto 2");
+                                DatosRecibidos.Items.Add(Saltos[2]);
+                                contador = 0;
+                                cond = 0;
+                                break;
+
+                        }
+
+                    }
+
+                    else
+                    {
+                        contador++;
+                    }
+
+                    for (int i = 19; i > 9 ; i--) // prepara el vector de diez elementos para la fase de deteccion de saltos
                     {
 
                         Datossec[j] = Datos[i];
@@ -66,22 +114,23 @@ namespace Programa_NovoSens_6._0_puerto_COM
                 }
             }
 
-            else if (cond == 1)
+            else if (cond == 1) // fase de deteccion de saltos
             {
-                double media = mate.calcMedia(Datossec, 10);
+                double media = mate.calcMedia(Datossec, 10); // calcula la media del vector de 10 elementos
 
-                double control = Double.Parse(accion);
+                double control = Double.Parse(accion); // obtiiene un dato para revisar salto
 
-                double aux = media + 25;
+                double aux = media + 25; // estima el tamaño del posible salto
 
-                if (control > aux)
+                if (control > aux) // revisa la existencia de un salto
                 {
-                    DatosRecibidos.Items.Add(media);
+
+                    Escalones[0] = media; // fija la base delcalculo de saltos
 
                     cond = 0;
                 }
 
-                else
+                else // renueva los valores del vector
                 {
                     for (int i = 0; i < 9; i++)
                     {
