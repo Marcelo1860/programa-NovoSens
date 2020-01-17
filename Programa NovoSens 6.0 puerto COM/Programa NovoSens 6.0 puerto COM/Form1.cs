@@ -56,7 +56,7 @@ namespace Programa_NovoSens_6._0_puerto_COM
 
                 double result = (desvest / media) * 100; // calcula cv%
 
-                if (result < 0.3) // compara CV% para estimar estabilidad
+                if (result < 0.3 && media > 1010) // compara CV% y media para estimar estabilidad
                 {
 
                     cond = 1; // cambia a condicion de deteccion de saltos
@@ -89,10 +89,12 @@ namespace Programa_NovoSens_6._0_puerto_COM
                             case 3:
                                 Escalones[1] = media;
                                 Saltos[2] = Escalones[1] - Escalones[0];
-                                DatosRecibidos.Items.Add("Salto 2");
+                                DatosRecibidos.Items.Add("Salto 3");
                                 DatosRecibidos.Items.Add(Saltos[2]);
                                 contador = 0;
                                 cond = 0;
+                                Escalones[1] = 0;
+                                Escalones[0] = 0; 
                                 break;
 
                         }
