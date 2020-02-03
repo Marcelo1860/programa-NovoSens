@@ -151,13 +151,22 @@ namespace Programa_NovoSens_6._0_puerto_COM
 
         private void AccesoInterrupcion(string accion) // funcion que adapta la interrupcion al acceso del form
         {
-            DelegadoAcceso Var_DelegaadoAcceso; // variable del delegado
+            try
+            {
+                DelegadoAcceso Var_DelegaadoAcceso; // variable del delegado
 
-            Var_DelegaadoAcceso = new DelegadoAcceso(AccesoForm); // la variable apunta a la funcion AccesoForm
+                Var_DelegaadoAcceso = new DelegadoAcceso(AccesoForm); // la variable apunta a la funcion AccesoForm
 
-            object[] arg = { accion }; // genera un argumento con la info que se obtiene en el puerto
+                object[] arg = { accion }; // genera un argumento con la info que se obtiene en el puerto
 
-            base.Invoke(Var_DelegaadoAcceso, arg); // invoca la variable del delegado con su argumento
+                base.Invoke(Var_DelegaadoAcceso, arg); // invoca la variable del delegado con su argumento
+            }
+            catch (Exception)
+            {
+
+                
+            }
+           
         }
 
         private void Form1_Load(object sender , EventArgs e) // inicializa las variables
